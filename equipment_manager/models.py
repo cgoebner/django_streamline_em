@@ -17,14 +17,12 @@ class Period(models.Model):
     This table is to ensure that periods are consistent with the relativedelta function used to
     calculate maintenance and calibration periods.
     """
-    duration = models.IntegerField(null=False, help_text='Enter the integer value associated with the '
-                                                         'period.')
-    period = models.CharField(max_length=50, null=False, help_text='Enter period. (e.g.,years, months, weeks, '
-                                                                   'days etc.)')
-
+    period = models.CharField(max_length=50, null=False, help_text='Enter period in plain language. (e.g.,once per year,'
+                                                                   ' every 3 months, once per week etc.)')
+    rel_period = models.CharField(max_length=20, help_text='Use this field to enter the associated relativedelta value.')
 
     def __str__(self):
-        return f"{self.duration} {self.period}"
+        return f"{self.period} ({self.rel_period})"
 
 
 class EquipmentManufacturer(models.Model):
@@ -48,7 +46,7 @@ class EquipmentModel(models.Model):
     by = models.CharField(max_length=50, null=False)
 
     def __str__(self):
-        return f"{self.manufacturer} - {self.model_sku}"
+        return f"{self.manufacturer} {self.model_sku}"
 
 
 class Instance(models.Model):
@@ -63,7 +61,7 @@ class Instance(models.Model):
         ordering = ['internal_id']
 
     def __str__(self):
-        return self.internal_id
+        return f"{self.internal_id} - {self.eqp_model}"
 
 
 class RecordType(models.Model):
@@ -82,8 +80,11 @@ class RecordDetail(models.Model):
     record_type = models.ForeignKey(RecordType, null=False, on_delete=models.CASCADE)
     detail = models.CharField(max_length=100, null=False)
 
+    class Meta:
+        ordering = ['record_type']
+
     def __str__(self):
-        return self.record_type
+        return f"{self.record_type} - {self.detail}"
 
 
 class RecordLog(models.Model):
@@ -97,7 +98,7 @@ class RecordLog(models.Model):
     detail_date = models.DateField(default=date.today, help_text='Use this field to enter dates associated with the '
                                                                  'detail. (e.g., calibration due date, maintenance '
                                                                  'due date etc.)')
-    documents = models.FileField(upload_to='eqp_records/% Y/% m/% d/')
+    documents = models.FileField(upload_to='eqp_records/')
     references = models.CharField(max_length=100)
     entry_date = models.DateField(default=date.today, null=False, help_text='Use this field to record the date of '
                                                                             'this record.')
@@ -107,4 +108,4 @@ class RecordLog(models.Model):
         ordering = ['instance', 'entry_date']
 
     def __str__(self):
-        return f"{self.instance} / {self.record_uuid}"
+        return f"{self.instance}  (log id: {self.record_uuid})"
