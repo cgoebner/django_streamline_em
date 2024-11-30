@@ -17,9 +17,10 @@ class Period(models.Model):
     This table is to ensure that periods are consistent with the relativedelta function used to
     calculate maintenance and calibration periods.
     """
-    period = models.CharField(max_length=50, null=False, help_text='Enter period in plain language. (e.g.,once per year,'
-                                                                   ' every 3 months, once per week etc.)')
-    rel_period = models.CharField(max_length=20, help_text='Use this field to enter the associated relativedelta value.')
+    period = models.CharField(max_length=50, null=False, help_text='Enter period in plain language. (e.g.,once per '
+                                                                   'year, every 3 months, once per week etc.)')
+    rel_period = models.CharField(max_length=20, null=True, help_text='Use this field to enter the associated '
+                                                                      'relativedelta value.')
 
     def __str__(self):
         return f"{self.period} ({self.rel_period})"
