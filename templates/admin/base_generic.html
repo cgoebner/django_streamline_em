@@ -22,14 +22,12 @@
 
             <ul class="sidebar-nav">
             <strong>(EM) Site Links</strong>
-                <li><a href="">Home</a></li>
-                <li><a href="">Search</a></li>
-                <li><a href="">Add States</a></li>
-                <li><a href="">Add Records</a></li>
-                <li><a href="">View Models</a></li>
-                <li><a href="">Add Models</a></li>
-                <li><a href="">State Logs</a></li>
-                <li><a href="">Record Logs</a></li>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'add record' %}">Add Record</a></li>
+                <li><a href="{% url 'add equipment' %}">Add Equipment</a></li>
+                <li><a href="{% url 'records' %}">Records</a></li>
+                <li><a href="{%  url 'equipment' %}">Equipment</a></li>
+                <li><a href="{% url 'test' %}">Test</a></li>
             </ul>
           {% endblock %}
         </div>
