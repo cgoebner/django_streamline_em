@@ -41,7 +41,7 @@ class EquipmentModel(models.Model):
     calibration_period = models.ForeignKey(Period, on_delete=models.PROTECT, related_name='calibration', help_text='Calibration period.')
     type = models.ForeignKey(EquipmentType, null=False, on_delete=models.PROTECT)
     description = models.CharField(max_length=100)
-    documents = models.FileField(upload_to='mfg_documents/')
+    documents = models.FileField(upload_to='mfg_documents/', blank=True)
     approval_ref = models.CharField(max_length=50)
     date = models.DateField(default=date.today, null=False)
     by = models.CharField(max_length=50, null=False)
@@ -96,11 +96,17 @@ class RecordLog(models.Model):
     instance = models.ForeignKey(Instance, null=False, on_delete=models.CASCADE)
     record_detail = models.ForeignKey(RecordDetail, null=False, on_delete=models.CASCADE)
     details = models.CharField(max_length=400)
-    detail_date = models.DateField(default=date.today, help_text='Use this field to enter dates associated with the '
-                                                                 'detail. (e.g., calibration due date, maintenance '
-                                                                 'due date etc.)')
-    documents = models.FileField(upload_to='eqp_records/')
-    references = models.CharField(max_length=100)
+    start_date = models.DateField(default=None, blank=True, null=True, help_text='Use this field to enter the date '
+                                                                                 'calibration or maintenance was '
+                                                                                 'performed or start date for a range '
+                                                                                 'entry.',
+                                  verbose_name='Date Performed / Start Date')
+    end_date = models.DateField(default=None, blank=True, null=True, help_text='Use this field to enter the next date '
+                                                                               'calibration or maintenance is due or '
+                                                                               'end date of a range entry.',
+                                verbose_name='Due Date / End Date')
+    documents = models.FileField(upload_to='eqp_records/', blank=True)
+    references = models.CharField(max_length=100, blank=True)
     entry_date = models.DateField(default=date.today, null=False, help_text='Use this field to record the date of '
                                                                             'this record.')
     by = models.CharField(max_length=50, null=False)
@@ -110,3 +116,8 @@ class RecordLog(models.Model):
 
     def __str__(self):
         return f"{self.instance}  (log id: {self.record_uuid})"
+
+
+"""End of the basic models for the equipment app. The following are for filters and other functionality"""
+
+
