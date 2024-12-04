@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # 'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +42,8 @@ INSTALLED_APPS = [
     'equipment_manager.apps.EquipmentManagerConfig',
     'django_tables2',
     'django_filters',
+    'crispy_forms',
+	'crispy_bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -130,9 +133,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads/') # 'data' is my media folder
 MEDIA_URL = '/uploads/'
 
-DJANGO_TABLES2_TABLE_ATTRS = {
-    'class': 'table table-hover',
-    'thead': {
-        'class': 'table-light',
-    },
-}
+# DJANGO_TABLES2_TABLE_ATTRS = {
+#     'class': 'table table-hover',
+#     'thead': {
+#         'class': 'table-light',
+#     },
+# }
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+CRISPY_TEMPLATE_PACK = "bootstrap4"
