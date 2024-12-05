@@ -7,7 +7,6 @@ from django.db import models
 class EquipmentType(models.Model):
     type = models.CharField(max_length=100, null=False, help_text='Enter the type of the equipment. (e.g., oven, '
                                                                   'tape measure etc.)')
-
     def __str__(self):
         return self.type
 
@@ -20,8 +19,7 @@ class Period(models.Model):
     period = models.CharField(max_length=50, null=False, help_text='Enter period in plain language. (e.g.,once per '
                                                                    'year, every 3 months, once per week etc.)')
     rel_period = models.CharField(max_length=20, null=True, help_text='Use this field to enter the associated '
-                                                                      'relativedelta value.')
-
+                                                                     'relativedelta value.')
     def __str__(self):
         return f"{self.period} ({self.rel_period})"
 
@@ -58,9 +56,6 @@ class Instance(models.Model):
     entry_date = models.DateField(default=date.today, null=False)
     by = models.CharField(max_length=50, null=False)
 
-    class Meta:
-        ordering = ['internal_id']
-
     def __str__(self):
         return f"{self.internal_id} - {self.eqp_model}"
 
@@ -81,10 +76,8 @@ class RecordDetail(models.Model):
     record_type = models.ForeignKey(RecordType, null=False, on_delete=models.CASCADE)
     detail = models.CharField(max_length=100, null=False)
 
-    class Meta:
-        ordering = ['record_type']
-
     def __str__(self):
+
         return f"{self.record_type} - {self.detail}"
 
 
@@ -110,9 +103,6 @@ class RecordLog(models.Model):
     entry_date = models.DateField(default=date.today, null=False, help_text='Use this field to record the date of '
                                                                             'this record.')
     by = models.CharField(max_length=50, null=False)
-
-    class Meta:
-        ordering = ['instance', 'entry_date']
 
     def __str__(self):
         return f"{self.instance}  (log id: {self.record_uuid})"

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="pageholder">
+    <div class="titleholder">
+        <div class="title"><i class="fa-solid fa-table"></i> Welcome to the AMRECO Equipment Log </div>
+    </div>
+
+    <div class="linkholder">
+        <div class="linkbox">
+            <a href="{% url 'modelchoicefield' %}">  Record Log Entry Form </a>
+        </div>
+    </div>
+
+    <div class="linkholder">
+        <div class="linkbox">
+            <a href="{% url 'records'%}"> Equipment Records </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

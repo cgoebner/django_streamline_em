@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+    <form method="post">
+    {% csrf_token %}
+        <div class="pageholder">
+            <div class="titleholder">
+                <a class="button mr-2 ml-2" href="{% url 'home'%}"> To home</a>
+                <button class="button"type="submit"> Submit</button>
+                <div class="title"><i class="fa-solid fa-table"></i> Add a New Record </div>
+
+            </div>
+
+            <div class="linkholder">
+
+                {{form.instance|as_crispy_field}}
+                {{form.record_detail|as_crispy_field}}
+                {{form.start_date|as_crispy_field}}
+                {{form.end_date|as_crispy_field}}
+            </div>
+            
+            <div class="linkholder">
+                {{form.details|as_crispy_field}}
+                {{form.by|as_crispy_field}}
+                {{form.entry_date|as_crispy_field}}
+
+            </div>
+        </div>
+    </form>
+</body>
+{% endblock %}
+

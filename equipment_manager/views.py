@@ -1,63 +1,61 @@
-from django.shortcuts import render
-import django_filters
-def ph_index_view(request):
-    context = {
-        'ph_index_text': 'This is a placeholder for the index page.'
-    }
-    return render(request, 'index.html', context)
+from django.shortcuts import render, redirect
+from .forms import *
+from .models import *
+from django.http import JsonResponse
 
 
-def ph_add_record_view(request):
-    context = {
-        'ph_add_record_text': 'This is a placeholder for the add record page.'
-    }
-    return render(request, 'add_record.html', context)
-
-def ph_add_equipment_view(request):
-    context = {
-        'ph_add_equipment_text': 'This is a placeholder for the add equipment page.'
-    }
-    return render(request, 'add_equipment.html', context)
-
-def ph_records_view(request):
-    context = {
-        'ph_records_text': 'This is a placeholder for the records page.'
-    }
+def records(request):
+    context = {}
     return render(request, 'records.html', context)
 
-def ph_equipment_view(request):
+
+def home(request):
     context = {
-        'ph_equipment_text': 'This is a placeholder for the equipment page.'
     }
-    return render(request, 'equipment.html', context)
-
-def ph_test_view(request):
-    context = {
-        'ph_test_text': 'This is a placeholder for the test page.'
-    }
-    return render(request, 'test.html', context)
+    return render(request, 'home.html', context)
 
 
-from django_tables2 import SingleTableView
-from .models import RecordLog
-from .tables import RecordLogTable
+def modelchoicefield(request):
+    form = RecordLogForm(request.POST or None)
+    if request.POST and form.is_valid():
+        instance = form.cleaned_data['Equipment Instance']
+        record_detail = form.cleaned_data['Record Detail']
+        start_date = form.cleaned_data['Date Performed/Start Date']
+        end_date = form.cleaned_data['Due Date/End Date']
+        details = form.cleaned_data['Record Details']
+        by = form.cleaned_data['Created By']
+        entry_date = form.cleaned_data['Record Entry Date']
 
-class RecordLogListView(SingleTableView):
-    model = RecordLog
-    table_class = RecordLogTable
-    template_name = 'records.html'
+        obj = RecordLog(
+            instance=instance,
+            record_detail=record_detail,
+            start_date=start_date,
+            end_date=end_date,
+            details=details,
+            by=by,
+            entry_date=entry_date,
+        )
 
-# class RecordLogFilter(django_filters.FilterSet):
-#     name = django_filters.CharFilter(lookup_expr='iexact')
-#
-#     class Meta:
-#         model = RecordLog
-#         fields = ['instance']
-#
-# def record_log_list(request):
-#     f = RecordLogFilter(request.GET, queryset=RecordLog.objects.all())
-#     return render(request, 'records.html', {'filter': f})
-#
-#
-# class RecordLogListView:
-#     pass
+        obj.save()
+        form2 = RecordLogForm(request.POST, instance=obj)
+        form2.save(commit=False)
+        form2.save_m2m()
+        return redirect('home')
+
+    context = {'form': form}
+    return render(request, 'modelchoicefield.html', context)
+
+
+def jsonrecords(request):
+    result_list = list(RecordLog.objects.all() \
+                       .values('entry_date',
+                               'instance',
+                               'record_detail',
+                               'details',
+                               'start_date',
+                               'end_date',
+                               'by',
+                               'record_uuid',
+                               ))
+
+    return JsonResponse(result_list, safe=False)
